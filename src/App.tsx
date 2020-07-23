@@ -2,7 +2,6 @@ import React from 'react';
 import { Redirect, Route } from 'react-router-dom';
 import { IonApp, IonRouterOutlet } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
-import Home from './pages/Home';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -23,15 +22,28 @@ import '@ionic/react/css/display.css';
 /* Theme variables */
 import './theme/variables.css';
 
+import { Provider } from 'react-redux';
+import { PersistGate } from 'redux-persist/integration/react';
+
+import { store, persistor } from './store';
+
+import HomePage from './pages/Home';
+import EditPage from './pages/Edit';
+
 const App: React.FC = () => (
-  <IonApp>
-    <IonReactRouter>
-      <IonRouterOutlet>
-        <Route path="/home" component={Home} exact={true} />
-        <Route exact path="/" render={() => <Redirect to="/home" />} />
-      </IonRouterOutlet>
-    </IonReactRouter>
-  </IonApp>
+    <Provider store={store}>
+        <PersistGate persistor={persistor}>
+            <IonApp>
+                <IonReactRouter>
+                    <IonRouterOutlet>
+                        <Route exact path="/" render={() => <Redirect to="/home" />} />
+                        <Route path="/home" component={HomePage} exact={true} />
+                        <Route path="/edit" component={EditPage} exact={true} />
+                    </IonRouterOutlet>
+                </IonReactRouter>
+            </IonApp>
+        </PersistGate>
+    </Provider>
 );
 
 export default App;
